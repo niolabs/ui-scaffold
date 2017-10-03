@@ -15,7 +15,7 @@ export default class HomePage extends React.Component {
 
   componentDidMount() {
     this.demo_output = document.getElementById('demo_output');
-    
+
     // let's create some stream. this could also be from a pubkeeper client subscription
     const stream = kefir.stream((emitter) => {
       let count = 0;
