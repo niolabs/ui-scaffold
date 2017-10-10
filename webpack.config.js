@@ -23,7 +23,7 @@ module.exports = {
     compress: true,
     port: 3002,
     historyApiFallback: true,
-    https: false,
+    https: true,
   },
 
   plugins: [
