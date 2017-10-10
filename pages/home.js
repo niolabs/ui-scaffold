@@ -58,7 +58,7 @@ export default class HomePage extends React.Component {
   render() {
     return (
       <Card>
-        <CardBlock>
+        <CardBlock className="p-3">
           <h2 className="m-0">Home</h2>
           <b>subhead</b>
           <hr className="my-3" />
