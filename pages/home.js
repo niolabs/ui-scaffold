@@ -1,6 +1,6 @@
 import React from 'react';
 import kefir from 'kefir';
-import { Card, CardBlock } from '@nio/ui-kit';
+import { Card, CardBody } from '@nio/ui-kit';
 
 import pubkeeper_client from '../components/pubkeeper_client';
 
@@ -58,12 +58,12 @@ export default class HomePage extends React.Component {
   render() {
     return (
       <Card>
-        <CardBlock className="p-3">
+        <CardBody className="p-3">
           <h2 className="m-0">Home</h2>
           <b>subhead</b>
           <hr className="my-3" />
           <div id="demo_output" />
-        </CardBlock>
+        </CardBody>
       </Card>
     );
   }

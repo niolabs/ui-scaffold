@@ -11,7 +11,7 @@
   "author": "niolabs",
   "license": "UNLICENSED",
   "dependencies": {
-    "@nio/ui-kit": "^1.0.0-beta.11",
+    "@nio/ui-kit": "^1.0.0-beta.12",
     "@pubkeeper/browser-client": "^3.0.0-alpha.7",
     "babel-runtime": "^6.26.0",
     "file-loader": "^0.11.2",
