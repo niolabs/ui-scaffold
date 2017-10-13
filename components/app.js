@@ -21,7 +21,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Navbar id="app-nav" color="inverse" fixed="top" inverse toggleable>
+        <Navbar id="app-nav" color="inverse" fixed="top" dark expand>
           <NavbarToggler right onClick={this.toggle} isOpen={this.state.isOpen} />
           <NavbarBrand>
             <div id="logo" />

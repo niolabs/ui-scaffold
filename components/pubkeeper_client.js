@@ -1,4 +1,4 @@
-import PubkeeperClient, { WebSocketBrew } from '@pubkeeper/browser-client';
+import { PubkeeperClient, WebSocketBrew } from '@pubkeeper/browser-client';
 import config from '../config';
 
 // configuration for the Pubkeeper client
@@ -11,7 +11,7 @@ const pubkeeper_client = new PubkeeperClient({
         hostname: config.WS_HOST,
         port: config.WS_PORT,
         secure: config.WS_SECURE,
-      }
+      },
     }),
   ],
 });
