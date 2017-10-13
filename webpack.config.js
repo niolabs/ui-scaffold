@@ -1,10 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
 const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const OptimizeJsPlugin = require('optimize-js-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const cssNano = require('cssnano');
 /* eslint-enable import/no-extraneous-dependencies */
@@ -21,30 +23,19 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'public'),
     compress: true,
-    port: 3002,
+    port: 3008,
     historyApiFallback: true,
     https: true,
   },
 
   plugins: [
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'assets/index.html'),
-      favicon: path.join(__dirname, 'assets/favicon.ico'),
-      inject: 'body',
-    }),
+    new CleanWebpackPlugin(['public']),
+    new HtmlWebpackPlugin({ template: path.join(__dirname, 'assets/index.html'), favicon: path.join(__dirname, 'assets/favicon.ico'), inject: 'body' }),
     new ExtractTextPlugin('[contenthash].min.css'),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: /\.css$/g,
-      cssProcessor: cssNano,
-      cssProcessorOptions: {
-        discardComments: {
-          removeAll: true,
-        },
-      },
-      canPrint: true,
-    }),
+    new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true }}, canPrint: true }),
     new OptimizeJsPlugin({ sourceMap: false }),
+    new UglifyJSPlugin({ parallel: true, sourceMap: false, cache: true, uglifyOptions: { compress: true } }),
     new CopyWebpackPlugin([{ from: 'assets/static' }]),
   ],
 
