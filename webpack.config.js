@@ -34,8 +34,8 @@ module.exports = {
     new HtmlWebpackPlugin({ template: path.join(__dirname, 'assets/index.html'), favicon: path.join(__dirname, 'assets/favicon.ico'), inject: 'body' }),
     new ExtractTextPlugin('[contenthash].min.css'),
     new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true }}, canPrint: true }),
-    new OptimizeJsPlugin({ sourceMap: false }),
-    new UglifyJSPlugin({ parallel: true, sourceMap: false, cache: true, uglifyOptions: { compress: true } }),
+    //new OptimizeJsPlugin({ sourceMap: false }),
+    //new UglifyJSPlugin({ parallel: true, sourceMap: false, cache: true, uglifyOptions: { compress: true } }),
     new CopyWebpackPlugin([{ from: 'assets/static' }]),
   ],
 
