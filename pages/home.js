@@ -21,7 +21,7 @@ export default class HomePage extends React.Component {
       pubkeeper_client.addBrewer('ui_scaffold.example_brew', (brewer) => { app.brewer = brewer; app.startBrewInterval(); });
 
       // subscribe/add a patron to our own brew to demonstrate how the cycle works
-      pubkeeper_client.addPatron('*.**', (patron) => {
+      pubkeeper_client.addPatron('ui_scaffold.example_brew', (patron) => {
         const handler = (data) => {
           const json = new TextDecoder().decode(data);
           const newData = Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
