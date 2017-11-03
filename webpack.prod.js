@@ -20,23 +20,19 @@ module.exports = {
     publicPath: '/',
   },
 
-  devServer: {
-    contentBase: path.join(__dirname, 'public'),
-    compress: true,
-    port: 3008,
-    historyApiFallback: true,
-    https: true,
-  },
+  devtool: 'source-map',
 
   plugins: [
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
     new CleanWebpackPlugin(['public']),
-    new HtmlWebpackPlugin({ template: path.join(__dirname, 'assets/index.html'), favicon: path.join(__dirname, 'assets/favicon.ico'), inject: 'body' }),
+    new HtmlWebpackPlugin({ template: path.join(__dirname, 'assets/index.html'), favicon: path.join(__dirname, 'assets/favicon.ico'), inject: 'body', minify: { collapseWhitespace: true, collapseInlineTagWhitespace: true, removeComments: true, removeRedundantAttributes: true } }),
     new ExtractTextPlugin('[contenthash].min.css'),
     new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true }}, canPrint: true }),
-    //new OptimizeJsPlugin({ sourceMap: false }),
-    //new UglifyJSPlugin({ parallel: true, sourceMap: false, cache: true, uglifyOptions: { compress: true } }),
+    new OptimizeJsPlugin({ sourceMap: false }),
+    new UglifyJSPlugin({ parallel: true, sourceMap: false, cache: true, uglifyOptions: { compress: true } }),
     new CopyWebpackPlugin([{ from: 'assets/static' }]),
+    new webpack.HashedModuleIdsPlugin({ hashFunction: 'sha256', hashDigest: 'hex', hashDigestLength: 20 }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
   ],
 
   module: {
@@ -47,16 +43,7 @@ module.exports = {
         loader: 'babel-loader',
       },
       {
-        exclude: [
-          /\.html$/,
-          /\.(js|jsx)$/,
-          /\.s?css$/,
-          /\.json$/,
-          /\.bmp$/,
-          /\.gif$/,
-          /\.jpe?g$/,
-          /\.png$/,
-        ],
+        include: [/\.(ttf|woff|woff2|eot|svg)$/],
         loader: require.resolve('file-loader'),
         options: {
           name: 'fonts/[name].[ext]',

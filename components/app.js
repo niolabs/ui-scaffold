@@ -21,11 +21,9 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Navbar id="app-nav" color="inverse" fixed="top" dark expand>
-          <NavbarToggler right onClick={this.toggle} isOpen={this.state.isOpen} />
-          <NavbarBrand>
-            <div id="logo" />
-          </NavbarBrand>
+        <Navbar id="app-nav" color="inverse" fixed="top" dark expand="md">
+          <NavbarBrand><div id="logo" /></NavbarBrand>
+          <NavbarToggler right onClick={() => this.toggle()} isOpen={this.state.isOpen} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
