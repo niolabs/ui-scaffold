@@ -14,6 +14,7 @@ export default class HomePage extends React.Component {
 
   componentDidMount() {
     const app = this;
+    this.demo_output = document.getElementById('demo_output');
 
     // connect to the pubkeeper server
     pubkeeper_client.connect().then(() => {
@@ -25,6 +26,9 @@ export default class HomePage extends React.Component {
         const handler = (data) => {
           const json = new TextDecoder().decode(data);
           const newData = Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
+          const newDiv = document.createElement('div');
+          this.demo_output.appendChild(newDiv);
+          newDiv.textContent = json;
           console.log(newData); // eslint-disable-line no-console
         };
         patron.on('message', handler);
@@ -59,6 +63,7 @@ export default class HomePage extends React.Component {
           <h2 className="m-0">Home</h2>
           <b>subhead</b>
           <hr className="my-3" />
+          <div id="demo_output" />
         </CardBody>
       </Card>
     );

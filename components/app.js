@@ -27,10 +27,10 @@ class App extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink onClick={() => this.toggle(true)} to="/demo">Demo</NavLink>
+                <NavLink onClick={() => this.toggle(true)} to="/#demo">Demo</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink onClick={() => this.toggle(true)} to="/architecture">Architecture</NavLink>
+                <NavLink onClick={() => this.toggle(true)} to="/#arch">Architecture</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
