@@ -51,9 +51,7 @@ export default class Page extends React.Component {
 
   startBrewInterval() {
     this.brewInterval = setInterval(() => {
-      const time = new Date();
-      console.log('set', time);
-      this.brewer.brewJSON([{ time }]);
+      this.brewer.brewJSON([{ time: new Date() }]);
     }, 1000);
   }
 
@@ -67,11 +65,11 @@ export default class Page extends React.Component {
           <b>Current Time: {time.toLocaleString()}</b>
           <hr className="my-3" />
           <Row>
-            <Col xs="12" sm="6">
-              <div id="demo_output" />
+            <Col xs="12" sm="6" className="mb-2 text-center">
+              <Clock value={time} />
             </Col>
             <Col xs="12" sm="6">
-              <Clock value={time} />
+              <div id="demo_output" />
             </Col>
           </Row>
         </CardBody>
