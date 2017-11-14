@@ -4,7 +4,7 @@
 
 - `npm install --save`
 - `npm start`
-- visit the site at localhost:3002
+- visit the site at https://0.0.0.0:3002
 
 ### what's in the box
 

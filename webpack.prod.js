@@ -56,6 +56,16 @@ module.exports = {
           use: ['css-loader?importLoaders=1&minimize=true', 'sass-loader'],
         }),
       },
+      {
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader',
+        }, {
+          loader: 'less-loader',
+        }],
+      },
     ],
   },
 };

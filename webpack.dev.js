@@ -9,12 +9,13 @@ module.exports = {
   entry: path.join(__dirname, 'assets/index.js'),
 
   devServer: {
+    host: '0.0.0.0',
     contentBase: path.join(__dirname, 'public'),
     compress: false,
     port: 3008,
     historyApiFallback: true,
     filename: '[chunkhash].min.js',
-    https: false,
+    https: true,
   },
 
   plugins: [
@@ -43,6 +44,16 @@ module.exports = {
           fallback: 'style-loader',
           use: ['css-loader?importLoaders=1', 'sass-loader'],
         }),
+      },
+      {
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader',
+        }, {
+          loader: 'less-loader',
+        }],
       },
     ],
   },
