@@ -14,7 +14,7 @@ module.exports = {
     port: 3008,
     historyApiFallback: true,
     filename: '[chunkhash].min.js',
-    https: true,
+    https: false,
   },
 
   plugins: [
