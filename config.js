@@ -6,4 +6,7 @@ export default {
   WS_HOST: 'ws.demo.niolabs.com',
   WS_PORT: 443,
   WS_SECURE: true,
+  AUTH0_ACCT: 'quLReF2fOEnrBFtLA5yuh0pnuRUEuCVd',
+  AUTH0_URL: 'nio.auth0.com',
+  APP_REQUIRES_LOGIN: true,
 };

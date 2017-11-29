@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardBody, Row, Col, Clock } from '@nio/ui-kit';
 
-import pubkeeper_client from '../components/pubkeeper_client';
+import pubkeeper_client from '../components/pubkeeper';
 
 export default class Page extends React.Component {
   constructor() {

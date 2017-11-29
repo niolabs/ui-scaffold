@@ -2,18 +2,22 @@ import React from 'react';
 import { Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, Collapse } from '@nio/ui-kit';
 import { NavLink } from 'react-router-dom';
 
+import Auth from './auth';
+import config from '../config';
 import Routes from './routes';
+import LoginPage from '../pages/login';
 import '../assets/app.scss';
+
+const AUTH = config.APP_REQUIRES_LOGIN ? new Auth(config.AUTH0_ACCT, config.AUTH0_URL) : false;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false,
-    };
+    this.state = { isOpen: false };
+    const fns = ['toggle'];
+    fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
   }
+
   toggle(close) {
     this.setState({ isOpen: close ? false : !this.state.isOpen });
   }
@@ -32,11 +36,20 @@ class App extends React.Component {
               <NavItem>
                 <NavLink onClick={() => this.toggle(true)} to="/arch">Architecture</NavLink>
               </NavItem>
+              { AUTH && AUTH.loggedIn() && (
+                <NavItem>
+                  <NavLink onClick={() => AUTH.logout()} to="/">Log Out</NavLink>
+                </NavItem>
+              )}
             </Nav>
           </Collapse>
         </Navbar>
         <div id="app-container">
-          <Routes />
+          {((AUTH && AUTH.loggedIn()) || !AUTH) ? (
+            <Routes />
+          ) : (
+            <LoginPage />
+          )}
         </div>
       </div>
     );

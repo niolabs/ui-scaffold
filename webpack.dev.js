@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 /* eslint-enable import/no-extraneous-dependencies */
 
 module.exports = {
@@ -22,6 +23,7 @@ module.exports = {
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('development') }),
     new HtmlWebpackPlugin({ template: path.join(__dirname, 'assets/index.html'), favicon: path.join(__dirname, 'assets/favicon.ico'), inject: 'body', minify: { collapseWhitespace: true, collapseInlineTagWhitespace: true, removeComments: true, removeRedundantAttributes: true } }),
     new ExtractTextPlugin('[contenthash].min.css'),
+    new CopyWebpackPlugin([{ from: 'assets/static' }]),
   ],
 
   module: {
