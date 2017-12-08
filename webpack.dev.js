@@ -13,7 +13,7 @@ module.exports = {
     host: '0.0.0.0',
     contentBase: path.join(__dirname, 'public'),
     compress: false,
-    port: 3008,
+    port: 3000,
     historyApiFallback: true,
     filename: '[chunkhash].min.js',
     https: true,
