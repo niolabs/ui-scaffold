@@ -27,7 +27,7 @@ The niolabs UI Scaffold is made available under the [Apache 2.0 license](https:/
   - Open the <strong>System Designer</strong> in a browser: <a href="https://designer.n.io/" target="_blank">https://designer.n.io/</a>
   - Select your system in the left hand nav.
     - To create your first system, <a href="https://docs.n.io/getting_started/in_the_cloud.html" target="_blank">follow the instructions here</a>
-  - Click <strong>Edit <i className="fa fa-edit" /></strong> button in the system toolbar to open its configuration.
+  - Click <strong>Edit</strong> button in the system toolbar to open its configuration.
   - Copy the value for <strong>hostname</strong> into PK_HOST, the value for <strong>token</strong> into PK_JWT.
   - Copy the value for <strong>hostname</strong> into WS_HOST, but swap the word 'pubkeeper' for 'websocket'.
 - add your auth0 account and url if authentication is desired
