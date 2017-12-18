@@ -9,7 +9,7 @@
     "lint": "eslint components && eslint pages && sass-lint --verbose"
   },
   "author": "niolabs",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "@nio/ui-kit": "^1.1.5",
     "@pubkeeper/browser-client": "^3.2.1",
