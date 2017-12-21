@@ -13,7 +13,9 @@
   "dependencies": {
     "@nio/ui-kit": "^1.1.6",
     "@pubkeeper/browser-client": "^3.2.1",
+    "auth0-js": "^8.12.1",
     "auth0-lock": "^10.24.1",
+    "boostrap": "^2.0.0",
     "font-awesome": "^4.7.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
