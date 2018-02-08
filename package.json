@@ -11,7 +11,7 @@
   "author": "niolabs",
   "license": "Apache-2.0",
   "dependencies": {
-    "@nio/ui-kit": "^1.2.1",
+    "@nio/ui-kit": "^1.2.2",
     "@pubkeeper/browser-client": "^3.2.1",
     "auth0-lock": "^11.2.3",
     "font-awesome": "^4.7.0",
