@@ -7,7 +7,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 /* eslint-enable import/no-extraneous-dependencies */
 
 module.exports = {
-  entry: path.join(__dirname, 'assets/index.js'),
+  entry: {
+    index: ['babel-polyfill', path.join(__dirname, 'assets/index.js')],
+  },
 
   devServer: {
     host: '0.0.0.0',

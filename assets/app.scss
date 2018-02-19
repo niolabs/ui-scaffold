@@ -24,6 +24,10 @@
       background-size: contain;
     }
 
+    .nav-link {
+      padding: 0!important;
+    }
+
     .collapse:not(.show){
       .nav-item{
         margin-left: 1rem;
@@ -41,9 +45,15 @@
 
 #demo_output{
   border: 1px solid $gray-lightest;
-  height: 400px;
+  height: 150px;
   border-radius: 4px;
   overflow-y: auto;
+}
+
+#pkDetails {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .auth0-lock-container {
@@ -64,7 +74,8 @@
       display:none!important;
     }
   }
-  .auth0-lock-social-button[data-provider^="google"]{
+  .auth0-lock-social-button[data-provider^="google"],
+  .auth0-lock-submit{
     background-color: $brand-primary!important;
   }
 }

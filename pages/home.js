@@ -1,35 +1,45 @@
 import React from 'react';
-import { Card, CardBody, Row, Col, Clock } from '@nio/ui-kit';
 
-import pubkeeper_client from '../components/pubkeeper';
+import { Card, CardBody, Row, Col, Clock } from '@nio/ui-kit';
+import createPubkeeperClient from '../util/pubkeeper';
+import { getPubkeeper } from '../util/storage';
 
 export default class Home extends React.Component {
   constructor() {
     super();
+    this.pubkeeper_client = createPubkeeperClient();
     this.state = { time: new Date() };
     this.clock = false;
-    const fns = ['writeDataToOutput', 'clockRef'];
+    const fns = ['writeDataToOutput', 'clockRef', 'connectToPubkeeper'];
     fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
   }
 
   componentDidMount() {
-    this.demo_output = document.getElementById('demo_output');
-
-    // publish the count from our dummy stream to the your_brew socket room
-    pubkeeper_client.addBrewer('ui_scaffold.example_brew', (brewer) => {
-      this.brewInterval = setInterval(() => brewer.brewJSON([{ time: new Date() }]), 1000);
-      return () => { clearInterval(this.brewInterval); };
-    });
-
-    // subscribe/add a patron to our own brew to demonstrate how the cycle works
-    pubkeeper_client.addPatron('ui_scaffold.example_brew', (patron) => {
-      patron.on('message', this.writeDataToOutput);
-      return () => { patron.off('message', this.writeDataToOutput); };
-    });
+    this.connectToPubkeeper();
   }
 
   componentWillUnmount() {
-    clearInterval(this.brewInterval);
+    if (this.pubkeeper_client) this.pubkeeper_client.disconnect();
+    if (this.brewInterval) clearInterval(this.brewInterval);
+  }
+
+  connectToPubkeeper() {
+    if (this.pubkeeper_client) {
+      this.pubkeeper_client.connect().then(() => {
+        this.pubkeeper_client.addBrewer('ui_scaffold.example_brew', (brewer) => {
+          this.brewInterval = setInterval(() => brewer.brewJSON([{ time: new Date() }]), 1000);
+          return () => clearInterval(this.brewInterval);
+        });
+        this.pubkeeper_client.addPatron('ui_scaffold.example_brew', (patron) => {
+          patron.on('message', this.writeDataToOutput);
+          return () => patron.off('message', this.writeDataToOutput);
+        });
+      });
+    } else {
+      setTimeout(() => {
+        this.connectToPubkeeper();
+      }, 500);
+    }
   }
 
   writeDataToOutput(data) {
@@ -41,7 +51,7 @@ export default class Home extends React.Component {
 
     // append to list of all times
     const newDiv = document.createElement('div');
-    this.demo_output.prepend(newDiv);
+    document.getElementById('demo_output').prepend(newDiv);
     newDiv.textContent = json;
   }
 
@@ -51,12 +61,14 @@ export default class Home extends React.Component {
 
   render() {
     const { time } = this.state;
+    const pkConfig = getPubkeeper();
 
     return (
       <Card>
         <CardBody className="p-3">
           <h2 className="m-0">Home</h2>
-          <b>Current Time: {time.toLocaleString()}</b>
+          <b>Current Time:</b> {time.toLocaleString()}<br />
+          <b>Pubkeeper Server:</b> {pkConfig ? pkConfig.PK_NAME : '-'}
           <hr className="my-3" />
           <Row>
             <Col xs="12" sm="6" className="mb-2 text-center">
@@ -71,4 +83,3 @@ export default class Home extends React.Component {
     );
   }
 }
-
