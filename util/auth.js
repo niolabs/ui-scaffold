@@ -13,6 +13,8 @@ export const logout = () => { removeAuthentication(); webAuth.logout(); };
 
 export const isAuthenticated = () => new Date().getTime() < JSON.parse(localStorage.getItem('expires'));
 
+export const authRequired = () => config.auth0.app_requires_login;
+
 const fetchOrganizations = accessToken => new Promise((resolve) => {
   fetch(`${config.auth0.webAuth.audience}/orgs/organizations`, {
     method: 'get',

@@ -7,7 +7,7 @@ import Routes from './routes';
 import ConfigModal from './configModal';
 import '../assets/app.scss';
 
-import { isAuthenticated, handleAuthentication, getPkServers, login, logout } from '../util/auth';
+import { isAuthenticated, authRequired, handleAuthentication, getPkServers, login, logout } from '../util/auth';
 import { setPubkeeper, getPubkeeper, getSystems } from '../util/storage';
 
 
@@ -30,7 +30,7 @@ class App extends React.Component {
           setTimeout(window.location.reload());
         }
       });
-    } else if (!isAuthenticated()) {
+    } else if (!isAuthenticated() && (authRequired() || !getSystems())) {
       login();
     } else if (!getSystems()) {
       getPkServers().then(this.openModal());
@@ -57,8 +57,9 @@ class App extends React.Component {
     const { navOpen, configOpen } = this.state;
     const pk = getPubkeeper();
     const auth = isAuthenticated();
+    const authrequired = authRequired();
 
-    return auth ? (
+    return (auth || !authrequired) ? (
       <div>
         <Navbar id="app-nav" dark fixed="top" expand="md">
           <div className="navbar-brand">
@@ -79,9 +80,11 @@ class App extends React.Component {
               <NavItem>
                 <DumbNavLink onClick={() => this.openModal()}>Config</DumbNavLink>
               </NavItem>
-              <NavItem>
-                <DumbNavLink onClick={() => logout()}>Log Out</DumbNavLink>
-              </NavItem>
+              { auth && (
+                <NavItem>
+                  <DumbNavLink onClick={() => logout()}>Log Out</DumbNavLink>
+                </NavItem>
+              )}
             </Nav>
           </Collapse>
         </Navbar>
