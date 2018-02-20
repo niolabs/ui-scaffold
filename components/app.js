@@ -2,11 +2,9 @@ import React from 'react';
 import { Navbar, NavbarToggler, Nav, NavItem, Collapse, NavLink as DumbNavLink } from '@nio/ui-kit';
 import { NavLink } from 'react-router-dom';
 
-import Routes from './routes';
-
-import ConfigModal from './configModal';
 import '../assets/app.scss';
-
+import Routes from './routes';
+import ConfigModal from './configModal';
 import { isAuthenticated, authRequired, handleAuthentication, getPkServers, login, logout } from '../util/auth';
 import { setPubkeeper, getPubkeeper, getSystems } from '../util/storage';
 
@@ -70,6 +68,15 @@ class App extends React.Component {
           <NavbarToggler right onClick={() => this.toggleNav()} isOpen={navOpen} />
           <Collapse isOpen={navOpen} navbar>
             <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink exact to="/">Home</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink to="/page2">Page 2</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink to="/page3">Page 3</NavLink>
+              </NavItem>
               <NavItem>
                 <DumbNavLink onClick={() => this.openConfig()} title="settings"><i className="fa fa-lg fa-gear" /></DumbNavLink>
               </NavItem>
