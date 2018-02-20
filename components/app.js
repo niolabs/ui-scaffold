@@ -10,12 +10,11 @@ import '../assets/app.scss';
 import { isAuthenticated, authRequired, handleAuthentication, getPkServers, login, logout } from '../util/auth';
 import { setPubkeeper, getPubkeeper, getSystems } from '../util/storage';
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { navOpen: false, configOpen: false };
-    const fns = ['toggleNav', 'openConfig', 'setPubkeeperServer'];
+    const fns = ['toggleNav', 'openConfig', 'closeConfig', 'setPubkeeperServer'];
     fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
   }
 
@@ -36,7 +35,7 @@ class App extends React.Component {
   }
 
   setPubkeeperServer(uuid) {
-    this.setState({ configOpen: false });
+    this.closeConfig();
     setPubkeeper(uuid);
     setTimeout(window.location.reload());
   }
@@ -46,6 +45,10 @@ class App extends React.Component {
       getPkServers().then(() => this.setState({ configOpen: true }));
     }
     this.setState({ configOpen: true });
+  }
+
+  closeConfig() {
+    this.setState({ configOpen: false });
   }
 
   toggleNav(close) {
@@ -68,20 +71,15 @@ class App extends React.Component {
           <Collapse isOpen={navOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink onClick={() => this.toggleNav(true)} to="/">Home</NavLink>
+                <DumbNavLink onClick={() => this.openConfig()} title="settings"><i className="fa fa-lg fa-gear" /></DumbNavLink>
               </NavItem>
-              <NavItem>
-                <NavLink onClick={() => this.toggleNav(true)} to="/page2">Page 2</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink onClick={() => this.toggleNav(true)} to="/page3">Page 3</NavLink>
-              </NavItem>
-              <NavItem>
-                <DumbNavLink onClick={() => this.openConfig()}>Config</DumbNavLink>
-              </NavItem>
-              { auth && (
+              { auth ? (
                 <NavItem>
-                  <DumbNavLink onClick={() => logout()}>Log Out</DumbNavLink>
+                  <DumbNavLink onClick={() => logout()} title="log out"><i className="fa fa-lg fa-sign-out" /></DumbNavLink>
+                </NavItem>
+              ) : (
+                <NavItem>
+                  <DumbNavLink onClick={() => login()} title="log in"><i className="fa fa-lg fa-sign-in" /></DumbNavLink>
                 </NavItem>
               )}
             </Nav>
@@ -91,6 +89,7 @@ class App extends React.Component {
           { pk && (<Routes />)}
         </div>
         <ConfigModal
+          closeConfig={this.closeConfig}
           hasPubkeeper={pk !== null}
           isOpen={configOpen}
           setPubkeeperServer={this.setPubkeeperServer}
