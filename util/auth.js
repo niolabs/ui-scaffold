@@ -9,7 +9,7 @@ const webAuth = new WebAuth(config.auth0.webAuth);
 
 export const login = () => webAuth.authorize();
 
-export const logout = () => { removeAuthentication(); webAuth.logout(); };
+export const logout = () => { removeAuthentication(); webAuth.logout({ returnTo: window.location.origin }); };
 
 export const isAuthenticated = () => new Date().getTime() < JSON.parse(localStorage.getItem('expires'));
 
