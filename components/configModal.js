@@ -4,24 +4,6 @@ import { Row, Col, Button, Modal, ModalHeader, Loader } from '@nio/ui-kit';
 import { getSystems } from '../util/storage';
 
 class ConfigModal extends React.Component {
-  constructor(props) {
-    super(props);
-    const fns = ['getPubkeeperServers'];
-    fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
-  }
-
-  componentDidMount() {
-    this.getPubkeeperServers();
-  }
-
-  getPubkeeperServers() {
-    if (!getSystems()) {
-      setTimeout(() => { this.getPubkeeperServers(); }, 500);
-    } else {
-      this.forceUpdate();
-    }
-  }
-
   render() {
     const systems = getSystems();
     const { setPubkeeperServer, isOpen, hasPubkeeper } = this.props;
@@ -50,7 +32,7 @@ class ConfigModal extends React.Component {
                 {systems[uuid].name}
               </Col>
               <Col xs="4">
-                <Button color="success" disabled={hasPubkeeper && systems[uuid].active} block onClick={() => setPubkeeperServer(uuid)}>{hasPubkeeper && systems[uuid].active ? 'Active' : 'Choose'}</Button>
+                <Button color="primary" disabled={hasPubkeeper && systems[uuid].active} block onClick={() => setPubkeeperServer(uuid)}>{hasPubkeeper && systems[uuid].active ? 'Active' : 'Choose'}</Button>
               </Col>
               <Col xs="12">
                 <hr className="my=1" />

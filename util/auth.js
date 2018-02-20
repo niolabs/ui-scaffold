@@ -45,34 +45,37 @@ const fetchSystemDetails = (accessToken, organization_id, systemId) => new Promi
 });
 
 export const getPkServers = (accessToken = JSON.parse(localStorage.getItem('accessToken'))) => new Promise((resolve) => {
-  const mySystems = {};
-  const pkConfig = getPubkeeper();
-  let totalSystemCount = 0;
+  if (!isAuthenticated()) {
+    resolve(login());
+  } else {
+    const mySystems = {};
+    const pkConfig = getPubkeeper();
+    let totalSystemCount = 0;
 
-  fetchOrganizations(accessToken).then(orgs =>
-    orgs.organizations.map(org => fetchSystems(accessToken, org.organization_id).then((systems) => {
-      totalSystemCount += systems.systems.length;
-      systems.systems.map((system) => {
-        fetchSystemDetails(accessToken, org.organization_id, system.uuid).then((sysDetail) => {
-          if (sysDetail.pubkeeper_host && sysDetail.pubkeeper_token && sysDetail.pubkeeper_type === 'hosted') {
-            mySystems[system.uuid] = {
-              active: pkConfig && pkConfig.PK_JWT === sysDetail.pubkeeper_token,
-              org: org.name,
-              name: system.name,
-              pk_host: sysDetail.pubkeeper_host,
-              pk_token: sysDetail.pubkeeper_token,
-              type: sysDetail.pubkeeper_type,
-            };
-          } else {
-            totalSystemCount -= 1;
-          }
-          if (Object.keys(mySystems).length && Object.keys(mySystems).length === totalSystemCount) {
-            setSystems(mySystems);
-            resolve(history.push('/'));
-          }
+    fetchOrganizations(accessToken).then(orgs =>
+      orgs.organizations.map(org => fetchSystems(accessToken, org.organization_id).then((systems) => {
+        totalSystemCount += systems.systems.length;
+        systems.systems.map((system) => {
+          fetchSystemDetails(accessToken, org.organization_id, system.uuid).then((sysDetail) => {
+            if (sysDetail.pubkeeper_host && sysDetail.pubkeeper_token && sysDetail.pubkeeper_type === 'hosted') {
+              mySystems[system.uuid] = {
+                active: pkConfig && pkConfig.PK_JWT === sysDetail.pubkeeper_token,
+                org: org.name,
+                name: system.name,
+                pk_host: sysDetail.pubkeeper_host,
+                pk_token: sysDetail.pubkeeper_token,
+                type: sysDetail.pubkeeper_type,
+              };
+            } else {
+              totalSystemCount -= 1;
+            }
+            if (Object.keys(mySystems).length && Object.keys(mySystems).length === totalSystemCount) {
+              resolve(setSystems(mySystems));
+            }
+          });
         });
-      });
-    })));
+      })));
+  }
 });
 
 // After login Auth0 returns the user to ?authorize=true, handle

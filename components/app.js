@@ -15,27 +15,23 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { navOpen: false, configOpen: false };
-    const fns = ['toggleNav', 'openModal', 'setPubkeeperServer'];
+    const fns = ['toggleNav', 'openConfig', 'setPubkeeperServer'];
     fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
   }
 
   componentDidMount() {
     if (window.location.search.indexOf('authorize=true') >= 0) {
       handleAuthentication().then(() => {
-        if (!getSystems()) {
-          getPkServers().then(this.openModal());
-        } else if (!getPubkeeper()) {
-          this.openModal();
+        if (!getPubkeeper()) {
+          this.openConfig();
         } else {
           setTimeout(window.location.reload());
         }
       });
-    } else if (!isAuthenticated() && (authRequired() || !getSystems())) {
+    } else if (!isAuthenticated() && authRequired()) {
       login();
-    } else if (!getSystems()) {
-      getPkServers().then(this.openModal());
     } else if (!getPubkeeper()) {
-      this.openModal();
+      this.openConfig();
     }
   }
 
@@ -45,7 +41,10 @@ class App extends React.Component {
     setTimeout(window.location.reload());
   }
 
-  openModal() {
+  openConfig() {
+    if (!getSystems()) {
+      getPkServers().then(() => this.setState({ configOpen: true }));
+    }
     this.setState({ configOpen: true });
   }
 
@@ -78,7 +77,7 @@ class App extends React.Component {
                 <NavLink onClick={() => this.toggleNav(true)} to="/page3">Page 3</NavLink>
               </NavItem>
               <NavItem>
-                <DumbNavLink onClick={() => this.openModal()}>Config</DumbNavLink>
+                <DumbNavLink onClick={() => this.openConfig()}>Config</DumbNavLink>
               </NavItem>
               { auth && (
                 <NavItem>
@@ -92,7 +91,7 @@ class App extends React.Component {
           { pk && (<Routes />)}
         </div>
         <ConfigModal
-          hasPubkeeper={getPubkeeper() !== null}
+          hasPubkeeper={pk !== null}
           isOpen={configOpen}
           setPubkeeperServer={this.setPubkeeperServer}
         />
