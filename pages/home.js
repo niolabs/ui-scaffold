@@ -1,13 +1,11 @@
 import React from 'react';
 
 import { Card, CardBody, Row, Col, Clock } from '@nio/ui-kit';
-import createPubkeeperClient from '../util/pubkeeper';
-import { getPubkeeper } from '../util/storage';
+import { createPubkeeperClient, getPubkeeper } from '../util/pubkeeper';
 
 export default class Home extends React.Component {
   constructor() {
     super();
-    this.pubkeeper_client = createPubkeeperClient();
     this.state = { time: new Date() };
     this.clock = false;
     const fns = ['writeDataToOutput', 'clockRef', 'connectToPubkeeper'];
@@ -19,27 +17,26 @@ export default class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.pubkeeper_client) this.pubkeeper_client.disconnect();
     if (this.brewInterval) clearInterval(this.brewInterval);
+    if (this.pkClient) this.pkClient.disconnect();
   }
 
   connectToPubkeeper() {
-    if (this.pubkeeper_client) {
-      this.pubkeeper_client.connect().then(() => {
-        this.pubkeeper_client.addBrewer('ui_scaffold.example_brew', (brewer) => {
-          this.brewInterval = setInterval(() => brewer.brewJSON([{ time: new Date() }]), 1000);
-          return () => clearInterval(this.brewInterval);
+    createPubkeeperClient()
+      .then((pkClient) => {
+        this.pkClient = pkClient;
+        pkClient.connect().then(() => {
+          pkClient.addBrewer('ui_scaffold.example_brew', (brewer) => {
+            this.brewInterval = setInterval(() => brewer.brewJSON([{ time: new Date() }]), 1000);
+            return () => clearInterval(this.brewInterval);
+          });
+          pkClient.addPatron('ui_scaffold.example_brew', (patron) => {
+            patron.on('message', this.writeDataToOutput);
+            return () => patron.off('message', this.writeDataToOutput);
+          });
         });
-        this.pubkeeper_client.addPatron('ui_scaffold.example_brew', (patron) => {
-          patron.on('message', this.writeDataToOutput);
-          return () => patron.off('message', this.writeDataToOutput);
-        });
-      });
-    } else {
-      setTimeout(() => {
-        this.connectToPubkeeper();
-      }, 500);
-    }
+      })
+      .catch(() => console.log('unable to locate pubkeeper config details.'));
   }
 
   writeDataToOutput(data) {

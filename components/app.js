@@ -5,43 +5,30 @@ import { NavLink } from 'react-router-dom';
 import '../assets/app.scss';
 import Routes from './routes';
 import ConfigModal from './configModal';
-import { isAuthenticated, authRequired, handleAuthentication, getPkServers, login, logout } from '../util/auth';
-import { setPubkeeper, getPubkeeper, getSystems } from '../util/storage';
+import { isAuthenticated, authRequired, handleAuthentication, login, logout } from '../util/auth';
+import { staticPubkeeper } from '../util/pubkeeper';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { navOpen: false, configOpen: false };
-    const fns = ['toggleNav', 'openConfig', 'closeConfig', 'setPubkeeperServer'];
+    const fns = ['toggleNav', 'openConfig', 'closeConfig', 'forceRender'];
     fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
   }
 
   componentDidMount() {
     if (window.location.search.indexOf('authorize=true') >= 0) {
-      handleAuthentication().then(() => {
-        if (!getPubkeeper()) {
-          this.openConfig();
-        } else {
-          setTimeout(window.location.reload());
-        }
-      });
+      handleAuthentication().then(() => this.forceRender());
     } else if (!isAuthenticated() && authRequired()) {
       login();
-    } else if (!getPubkeeper()) {
-      this.openConfig();
     }
   }
 
-  setPubkeeperServer(uuid) {
-    this.closeConfig();
-    setPubkeeper(uuid);
-    setTimeout(window.location.reload());
+  forceRender() {
+    this.setState(this.state);
   }
 
   openConfig() {
-    if (!getSystems()) {
-      getPkServers().then(() => this.setState({ configOpen: true }));
-    }
     this.setState({ configOpen: true });
   }
 
@@ -55,9 +42,9 @@ class App extends React.Component {
 
   render() {
     const { navOpen, configOpen } = this.state;
-    const pk = getPubkeeper();
     const auth = isAuthenticated();
     const authrequired = authRequired();
+    const staticPk = staticPubkeeper();
 
     return (auth || !authrequired) ? (
       <div>
@@ -72,35 +59,40 @@ class App extends React.Component {
                 <NavLink exact to="/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/page2">Page 2</NavLink>
+                <NavLink exact to="/page2">Page 2</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="/page3">Page 3</NavLink>
+                <NavLink exact to="/page3">Page 3</NavLink>
               </NavItem>
-              <NavItem>
-                <DumbNavLink onClick={() => this.openConfig()} title="settings"><i className="fa fa-lg fa-gear" /></DumbNavLink>
-              </NavItem>
-              { auth ? (
+              {!staticPk && (
                 <NavItem>
-                  <DumbNavLink onClick={() => logout()} title="log out"><i className="fa fa-lg fa-sign-out" /></DumbNavLink>
+                  <DumbNavLink onClick={() => this.openConfig()} title="settings"><i className="fa fa-lg fa-gear" /></DumbNavLink>
                 </NavItem>
-              ) : (
-                <NavItem>
-                  <DumbNavLink onClick={() => login()} title="log in"><i className="fa fa-lg fa-sign-in" /></DumbNavLink>
-                </NavItem>
+              )}
+              { authrequired && (
+                auth ? (
+                  <NavItem>
+                    <DumbNavLink onClick={() => logout()} title="log out"><i className="fa fa-lg fa-sign-out" /></DumbNavLink>
+                  </NavItem>
+                ) : (
+                  <NavItem>
+                    <DumbNavLink onClick={() => login()} title="log in"><i className="fa fa-lg fa-sign-in" /></DumbNavLink>
+                  </NavItem>
+                )
               )}
             </Nav>
           </Collapse>
         </Navbar>
         <div id="app-container">
-          { pk && (<Routes />)}
+          <Routes />
         </div>
+        {!staticPk && (
         <ConfigModal
-          closeConfig={this.closeConfig}
-          hasPubkeeper={pk !== null}
           isOpen={configOpen}
-          setPubkeeperServer={this.setPubkeeperServer}
+          openConfig={this.openConfig}
+          closeConfig={this.closeConfig}
         />
+        )}
       </div>
     ) : null;
   }

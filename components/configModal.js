@@ -1,49 +1,88 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Button, Modal, ModalHeader, Loader } from '@nio/ui-kit';
-import { getSystems } from '../util/storage';
+import { Button, Modal, ModalHeader, Loader } from '@nio/ui-kit';
+import { isAuthenticated, login } from '../util/auth';
+import { getSystems, getPubkeeper, setPubkeeper, fetchPubkeeperServers } from '../util/pubkeeper';
 
 class ConfigModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    const fns = ['forceRender', 'onMount', 'onUpdate'];
+    fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
+  }
+
+  componentDidMount() {
+    setTimeout(() => { this.onMount(); }, 1000);
+  }
+
+  componentDidUpdate() {
+    this.onUpdate();
+  }
+
+  onMount() {
+    const { openConfig, isOpen } = this.props;
+
+    if (!getPubkeeper()) {
+      if (isAuthenticated()) {
+        if (!isOpen) openConfig();
+        if (!getSystems() && !this.fetching) {
+          this.fetching = true;
+          fetchPubkeeperServers().then(() => this.forceRender());
+        }
+      } else {
+        login();
+      }
+    }
+  }
+
+  onUpdate() {
+    const { isOpen } = this.props;
+
+    if (!getSystems() && isOpen) {
+      if (isAuthenticated() && !this.fetching) {
+        this.fetching = true;
+        fetchPubkeeperServers().then(() => this.forceRender());
+      } else {
+        login();
+      }
+    }
+  }
+
+  forceRender() {
+    this.fetching = false;
+    this.setState(this.state);
+  }
+
   render() {
+    const { closeConfig, isOpen } = this.props;
     const systems = getSystems();
-    const { setPubkeeperServer, isOpen, hasPubkeeper, closeConfig } = this.props;
+    const pk = getPubkeeper();
 
     return (
       <Modal isOpen={isOpen}>
         <ModalHeader>Choose Your Pubkeeper Server</ModalHeader>
         <div className="p-3">
           { systems ? Object.keys(systems).map(uuid => systems[uuid].pk_host && systems[uuid].pk_token && (
-            <Row key={uuid}>
-              <Col xs="6" sm="4" className="text-nowrap mb-2 text-center text-sm-left">
-                {systems[uuid].org}
-              </Col>
-              <Col xs="6" sm="4" className="text-nowrap mb-2 text-center text-sm-left">
-                {systems[uuid].name}
-              </Col>
-              <Col xs="12" sm="4">
-                <Button
-                  className="mb-3"
-                  color="primary"
-                  size="sm"
-                  disabled={hasPubkeeper && systems[uuid].active}
-                  block
-                  onClick={() => setPubkeeperServer(uuid)}
-                >
-                  {hasPubkeeper && systems[uuid].active ? 'Active' : 'Choose'}
-                </Button>
-              </Col>
-              <Col xs="12">
-                <hr className="mb-3 mt-0" />
-              </Col>
-            </Row>
+            <div key={uuid}>
+              <Button
+                className="mb-3"
+                outline={!pk || !systems[uuid].active}
+                color="primary"
+                block
+                onClick={() => (!systems[uuid].active ? setPubkeeper(uuid) : closeConfig())}
+              >
+                {systems[uuid].org} &raquo; {systems[uuid].name}
+              </Button>
+              <hr className="mb-3 mt-0" />
+            </div>
           )) : (
             <div style={{ position: 'relative' }}>
               <br /><br /><br /><br /><br />
               <Loader />
             </div>
           )}
-          <br />
-          <Button size="sm" color="secondary" block onClick={() => closeConfig()}>Cancel</Button>
+          <Button className="mt-2" color="secondary" block onClick={() => closeConfig()}>Cancel</Button>
         </div>
       </Modal>
     );
@@ -51,9 +90,8 @@ class ConfigModal extends React.Component {
 }
 
 ConfigModal.propTypes = {
-  hasPubkeeper: PropTypes.bool.isRequired,
-  setPubkeeperServer: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  openConfig: PropTypes.func.isRequired,
   closeConfig: PropTypes.func.isRequired,
 };
 
