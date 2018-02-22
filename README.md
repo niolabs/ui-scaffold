@@ -13,7 +13,7 @@ The easiest way to create a nio-powered UI is to start with our [UI scaffold](ht
     - [ReactJS](https://reactjs.org/) site scaffold
     - [react-router](https://reacttraining.com/react-router/) for navigation
     - [webpack 3](https://webpack.js.org/) module bundling and development webserver
-    - [auth0](https://auth0.com/) for securing the site (optional, default true)
+    - [auth0](https://auth0.com/) for securing the site (optional, default false)
 
 If you’re at all familiar with React, this simple example covers most of what you need to know to get started.
 
@@ -30,20 +30,7 @@ Follow these steps to create a simple UI that can publish to, subscribe to, and 
     npm i -s
     ```
 
-1. In the root of the project, rename `config.js.example` to `config.js`, and open it in a text editor.
-    1. **Never commit configuration details! We've added `config.js` to `.gitignore`. Even though these are public urls and tokens, it's bad practice to commit them. For deployment, make sure you put `config.js` at your project root.**
-
-1. Get your Pubkeeper **hostname** and **token** from your nio-managed cloud-instance:
-    1. Open the nio **System Designer** in a browser: https://designer.n.io/.
-    1. Select your system in the left-hand navigation.
-        1. If you need to create your first system, follow the instructions [here](/system-designer/designer-tasks.html).
-    1. Click the **edit** button in the contextual toolbar to open its configuration.
-
-1. In `config.js`:
-    1. Set `PK_HOST` to your **hostname** value.
-    1. Set `PK_JWT` to your **token** value.
-    1. Set `WS_HOST` to your **hostname** value, but swap the word 'pubkeeper' for 'websocket'.
-        1. e.g.- if your **hostname** is `aaaaa.pubkeeper.nio.works`, use `aaaaa.websocket.nio.works`.
+1. In the root of the project, rename `config.js.example` to `config.js`.
 
 1. Start the project.
     ```
@@ -51,7 +38,10 @@ Follow these steps to create a simple UI that can publish to, subscribe to, and 
     ```
 
 1. Visit the project at https://0.0.0.0:3000.
-    1. The development web server uses a self-signed certificate, and you may see a warning about the site being insecure. In your local development environment, it is safe to click "Advanced" > "proceed to site anyway."
+    - The development web server uses a self-signed certificate, and you may see a warning about the site being insecure. In your local development environment, it is safe to click "Advanced" > "proceed to site anyway."
+
+1. You'll be prompted to log into your **nio** account to choose which Pubkeeper Server your project should use
+    - If you see a message saying the application can't find any systems, follow the instructions [here](/system-designer/designer-tasks.html) to create one.
 
 You’ll see a simple UI with a clock that updates every second.
 
@@ -67,8 +57,47 @@ Sure, you could have just had the timer set the local state variable, but then y
 
 ---
 
+## Going public
+The UI Scaffold is set up to make local development fast and easy out of the box. This includes selecting your Pubkeeper Server for you by having you log in.
+
+#### Static Pubkeeper Server
+
+Of course, your **nio** app publishes only to your Pubkeeper server, so you'll want to configure a **Static Pubkeeper Server**:
+
+1. Get your Pubkeeper **hostname** and **token** from your nio-managed cloud-instance:
+    1. Open the nio **System Designer** in a browser: https://designer.n.io/.
+    1. Select your system in the left-hand navigation.
+    1. Click the **edit** button in the contextual toolbar to open its configuration.
+
+1. Open `config.js`
+    1. Set `staticPubkeeper` to **true**.
+    1. Set `PK_HOST` to your **hostname** value.
+    1. Set `PK_JWT` to your **token** value.
+    1. Set `WS_HOST` to your **hostname** value, but swap the word 'pubkeeper' for 'websocket'.
+        1. e.g.- if your **hostname** is `aaaaa.pubkeeper.nio.works`, use `aaaaa.websocket.nio.works`.
+
+#### Authentication (optional)
+
+By default, the auth0 configuration provided in `config.js` is used to log users into **nio** and fetch their Pubkeeper server details. **This will only work if you're running the site locally, at https://0.0.0.0:3000**.
+
+Once you configure the site to use a **Static Pubkeeper Server**, users won't need to log in.
+
+If you would like to require that users log in to access your app, you can leverage the auth0 authentication engine for that very purpose:
+
+ 1. Go to https://auth0.com and **Sign Up**.
+ 1. Once you complete the signup process, you'll be taken to your dashboard.
+ 1. Choose Clients > Settings
+    1. In `config.js`, replace **webAuth** Domain and Client ID with your own, and set Audience to **false**.
+    1. In Auth0, set the Client Type to **Single Page Application**
+    1. In Auth0, enter `https://0.0.0.0:3000?authorize=true` into **Allowed Callback URLs**
+    1. In Auth0, enter `https://0.0.0.0:3000` into **Allowed Logout URLs**.
+        - (You'll want to add your public URL to these boxes before you go live, of course.)
+
+----------------
+
 ## What’s next?
 The output of any service that shares the same Pubkeeper host and token that you configured above can be consumed by your UI. All you need to do is update the patron’s topic (or add new patrons!), register a handler, and render the data.
+
 The nio UI Kit at [https://uikit.niolabs.com](https://uikit.niolabs.com) is full of components for layout, charts, etc. that can be pulled into any React project that accommodates scss (we use webpack).
 
 Of course, if React isn’t your thing, the Pubkeeper browser client can be used on any site that supports JavaScript:

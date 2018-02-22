@@ -14,9 +14,9 @@ export default {
   auth0: {
     loginRequired: false,
     webAuth: {
-      domain: '',
-      clientID: '',
-      audience: '',
+      domain: 'nio.auth0.com',
+      clientID: 'quLReF2fOEnrBFtLA5yuh0pnuRUEuCVd',
+      audience: 'https://api.n.io/v1',
       responseType: 'token',
       redirectUri: `${window.location.origin}?authorize=true`,
       leeway: 60,
