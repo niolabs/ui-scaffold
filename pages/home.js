@@ -36,7 +36,7 @@ export default class Home extends React.Component {
           });
         });
       })
-      .catch(() => console.log('unable to locate pubkeeper config details.'));
+      .catch(() => console.log('unable to locate pubkeeper config details.')); // eslint-disable-line no-console
   }
 
   writeDataToOutput(data) {

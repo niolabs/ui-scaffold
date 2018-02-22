@@ -84,12 +84,14 @@ export const fetchPubkeeperServers = () => new Promise((resolve) => {
   const pkConfig = getPubkeeper();
   const accessToken = get('accessToken', true);
   let totalSystemCount = 0;
+  let loopTimeout;
 
-  fetchOrganizations(accessToken).then(orgs =>
+  fetchOrganizations(accessToken).then((orgs) => {
     orgs.organizations.map(org => fetchSystems(accessToken, org.organization_id).then((systems) => {
       totalSystemCount += systems.systems.length;
       systems.systems.map((system) => {
         fetchSystemDetails(accessToken, org.organization_id, system.uuid).then((sysDetail) => {
+          clearTimeout(loopTimeout);
           if (sysDetail.pubkeeper_host && sysDetail.pubkeeper_token && sysDetail.pubkeeper_type === 'hosted') {
             mySystems[system.uuid] = {
               active: pkConfig && pkConfig.PK_JWT === sysDetail.pubkeeper_token,
@@ -104,8 +106,11 @@ export const fetchPubkeeperServers = () => new Promise((resolve) => {
           }
           if (Object.keys(mySystems).length && Object.keys(mySystems).length === totalSystemCount) {
             resolve(setSystems(mySystems));
+          } else {
+            loopTimeout = setTimeout(() => { resolve(setSystems(mySystems)); }, 1000);
           }
         });
       });
-    })));
+    }));
+  });
 });

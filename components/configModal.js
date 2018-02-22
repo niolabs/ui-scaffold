@@ -26,9 +26,9 @@ class ConfigModal extends React.Component {
     if (!getPubkeeper()) {
       if (isAuthenticated()) {
         if (!isOpen) openConfig();
-        if (!getSystems() && !this.fetching) {
+        if (!this.fetching) {
           this.fetching = true;
-          fetchPubkeeperServers().then(() => this.forceRender());
+          fetchPubkeeperServers().then(e => !e && this.forceRender());
         }
       } else {
         login();
@@ -39,10 +39,10 @@ class ConfigModal extends React.Component {
   onUpdate() {
     const { isOpen } = this.props;
 
-    if (!getSystems() && isOpen) {
-      if (isAuthenticated() && !this.fetching) {
+    if (isOpen && !this.fetching) {
+      if (isAuthenticated()) {
         this.fetching = true;
-        fetchPubkeeperServers().then(() => this.forceRender());
+        fetchPubkeeperServers().then(e => !e && this.forceRender());
       } else {
         login();
       }
@@ -63,7 +63,7 @@ class ConfigModal extends React.Component {
       <Modal isOpen={isOpen}>
         <ModalHeader>Choose Your Pubkeeper Server</ModalHeader>
         <div className="p-3">
-          { systems ? Object.keys(systems).map(uuid => systems[uuid].pk_host && systems[uuid].pk_token && (
+          { systems && Object.keys(systems).length ? Object.keys(systems).map(uuid => systems[uuid].pk_host && systems[uuid].pk_token && (
             <div key={uuid}>
               <Button
                 className="mb-3"
@@ -76,12 +76,18 @@ class ConfigModal extends React.Component {
               </Button>
               <hr className="mb-3 mt-0" />
             </div>
-          )) : (
-            <div style={{ position: 'relative' }}>
-              <br /><br /><br /><br /><br />
+          )) : systems ? (
+            <div className="text-center pt-3">
+              No Systems Found.<br />
+              <a href="https://designer.n.io" rel="noreferrer noopener" target="_blank">Click here to create one in the nio System Designer</a>
+              <hr className="mb-3 mt-4" />
+            </div>
+          ) : (
+            <div className="text-center p-4" style={{ position: 'relative' }}>
+              <br /><br />
               <Loader />
             </div>
-          )}
+            )}
           <Button className="mt-2" color="secondary" block onClick={() => closeConfig()}>Cancel</Button>
         </div>
       </Modal>
