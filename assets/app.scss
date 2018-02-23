@@ -98,8 +98,8 @@
 
 #pkDetails {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 
