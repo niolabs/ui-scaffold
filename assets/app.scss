@@ -66,6 +66,7 @@
           text-align:center;
           .nav-link,
           a {
+            display:block;
             color: $gray !important;
             padding: 1rem 0 !important;
             border-bottom: 1px solid $gray-lightest;
