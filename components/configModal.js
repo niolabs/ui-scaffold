@@ -127,7 +127,9 @@ class ConfigModal extends React.Component {
               <Loader />
             </div>
             )}
-          <Button className="mt-2" color="secondary" block onClick={() => closeConfig()}>Cancel</Button>
+          { (pkOK || !staticPk) && (
+            <Button className="mt-2" color="secondary" block onClick={() => closeConfig()}>Cancel</Button>
+          )}
         </div>
       </Modal>
     );
