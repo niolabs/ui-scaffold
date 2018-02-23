@@ -56,13 +56,13 @@ class App extends React.Component {
           <Collapse isOpen={navOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink exact to="/">Home</NavLink>
+                <NavLink onClick={this.toggleNav} exact to="/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink exact to="/page2">Page 2</NavLink>
+                <NavLink onClick={this.toggleNav} exact to="/page2">Page 2</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink exact to="/page3">Page 3</NavLink>
+                <NavLink onClick={this.toggleNav} exact to="/page3">Page 3</NavLink>
               </NavItem>
               {!staticPk && (
                 <NavItem>
