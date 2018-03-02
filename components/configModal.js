@@ -66,11 +66,15 @@ class ConfigModal extends React.Component {
   }
   
   getPubkeeperServers() {
-    this.setState({ fetching: true });
-    setSystems(false);
-    fetchPubkeeperServers()
-      .then(e => !e && this.forceRender())
-      .catch(e => this.setState({ fetching: false, fetchingError: e }));
+    if (isAuthenticated()) {
+      this.setState({fetching: true});
+      setSystems(false);
+      fetchPubkeeperServers()
+        .then(e => !e && this.forceRender())
+        .catch(e => this.setState({fetching: false, fetchingError: e}));
+    } else {
+      login();
+    }
   }
   
   setPubkeeperServer(uuid) {
