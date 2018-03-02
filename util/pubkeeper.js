@@ -6,7 +6,7 @@ export const staticPubkeeper = () => config.pubkeeper.staticPubkeeper;
 
 export const getSystems = () => get('systems', true);
 
-const setSystems = systems => set('systems', systems, true);
+export const setSystems = systems => set('systems', systems, true);
 
 export const getPubkeeper = () => (config.pubkeeper.staticPubkeeper ? config.pubkeeper.pkConfig : get('pkConfig', true));
 
@@ -25,7 +25,7 @@ export const setPubkeeper = (uuid) => {
       WS_PORT: 443,
       WS_SECURE: true,
     }, true);
-    setTimeout(window.location.reload());
+    setTimeout(() => window.location.reload(), 500);
   }
 };
 
@@ -50,41 +50,46 @@ export const createPubkeeperClient = () => new Promise((resolve, reject) => {
   }
 });
 
-const fetchOrganizations = accessToken => new Promise((resolve) => {
+const fetchOrganizations = accessToken => new Promise((resolve, reject) => {
   fetch(`${config.auth0.webAuth.audience}/orgs/organizations`, {
     method: 'get',
     headers: {
       Authorization: `bearer ${accessToken}`,
     } })
-    .then(orgs => resolve(orgs.json()));
+    .then(orgs => resolve(orgs.json()))
+    .catch(e => resolve(e));
 });
 
-const fetchSystems = (accessToken, organization_id) => new Promise((resolve) => {
+const fetchSystems = (accessToken, organization_id) => new Promise((resolve, reject) => {
   fetch(`${config.auth0.webAuth.audience}/systems`, {
     method: 'get',
     headers: {
       Authorization: `bearer ${accessToken}`,
       'nio-organization': organization_id,
     } })
-    .then(systems => resolve(systems.json()));
+    .then(systems => resolve(systems.json()))
+    .catch(e => reject(e));
 });
 
-const fetchSystemDetails = (accessToken, organization_id, systemId) => new Promise((resolve) => {
+const fetchSystemDetails = (accessToken, organization_id, systemId) => new Promise((resolve, reject) => {
   fetch(`${config.auth0.webAuth.audience}/systems/${systemId}`, {
     method: 'get',
     headers: {
       Authorization: `bearer ${accessToken}`,
       'nio-organization': organization_id,
     } })
-    .then(system => resolve(system.json()));
+    .then(system => resolve(system.json()))
+    .catch(e => reject(e));
 });
 
-export const fetchPubkeeperServers = () => new Promise((resolve) => {
+export const fetchPubkeeperServers = () => new Promise((resolve, reject) => {
   const mySystems = {};
   const pkConfig = getPubkeeper();
   const accessToken = get('accessToken', true);
   let totalSystemCount = 0;
   let loopTimeout;
+
+  setSystems(false);
 
   fetchOrganizations(accessToken).then((orgs) => {
     orgs.organizations.map(org => fetchSystems(accessToken, org.organization_id).then((systems) => {
@@ -107,10 +112,17 @@ export const fetchPubkeeperServers = () => new Promise((resolve) => {
           if (Object.keys(mySystems).length && Object.keys(mySystems).length === totalSystemCount) {
             resolve(setSystems(mySystems));
           } else {
-            loopTimeout = setTimeout(() => { resolve(setSystems(mySystems)); }, 1000);
+            loopTimeout = setTimeout(() => {
+              resolve(setSystems(mySystems));
+            }, 1000);
           }
-        });
+        }).catch(e => reject('We were unable to fetch your system details.'));
       });
-    }));
-  });
+    }).catch(e => reject('We were unable to fetch your systems.')));
+  }).catch(e => reject('We were unable to fetch your organizations.'));
 });
+
+export const processPubkeeperData = (data) => {
+  const json = new TextDecoder().decode(data);
+  return Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
+};
