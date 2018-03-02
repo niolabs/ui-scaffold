@@ -11,21 +11,21 @@ class ConfigModal extends React.Component {
     const fns = ['forceRender', 'onMount', 'onUpdate', 'getPubkeeperServers', 'setPubkeeperServer'];
     fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
   }
-
+  
   componentDidMount() {
     setTimeout(() => { this.onMount(); }, 1000);
   }
-
+  
   componentDidUpdate() {
     this.onUpdate();
   }
-
+  
   onMount() {
     const { openConfig, isOpen } = this.props;
     const pk = getPubkeeper();
     const staticPk = staticPubkeeper();
     const pkOK = pk && pk.PK_HOST && pk.PK_JWT && pk.WS_HOST;
-
+    
     if (!pkOK) {
       if (isAuthenticated() && !staticPk) {
         if (!isOpen) openConfig();
@@ -42,15 +42,15 @@ class ConfigModal extends React.Component {
       }
     }
   }
-
+  
   onUpdate() {
     const { openConfig, isOpen } = this.props;
     const { fetchingError } = this.state;
-
+    
     const pk = getPubkeeper();
     const staticPk = staticPubkeeper();
     const pkOK = pk && pk.PK_HOST && pk.PK_JWT && pk.WS_HOST;
-
+    
     if (!staticPk && isOpen && !getSystems() && !fetchingError) {
       if (isAuthenticated()) {
         this.fetching = true;
@@ -64,7 +64,7 @@ class ConfigModal extends React.Component {
       openConfig();
     }
   }
-
+  
   getPubkeeperServers() {
     this.setState({ fetching: true });
     setSystems(false);
@@ -72,27 +72,27 @@ class ConfigModal extends React.Component {
       .then(e => !e && this.forceRender())
       .catch(e => this.setState({ fetching: false, fetchingError: e }));
   }
-
+  
   setPubkeeperServer(uuid) {
     this.setState({ setting: true });
     setPubkeeper(uuid);
   }
-
+  
   forceRender() {
     this.fetching = false;
     this.setState({ fetching: false, fetchingError: false });
   }
-
+  
   render() {
     const { closeConfig, isOpen } = this.props;
     const { fetching, fetchingError, setting } = this.state;
-
+    
     const systems = getSystems();
     const systemsOk = systems && Object.keys(systems).length;
     const pk = getPubkeeper();
     const staticPk = staticPubkeeper();
     const pkOK = pk && pk.PK_HOST && pk.PK_JWT && pk.WS_HOST;
-
+    
     return (
       <Modal isOpen={isOpen}>
         <div className="p-3">
@@ -128,18 +128,18 @@ class ConfigModal extends React.Component {
             Please click <i>Reload Pubkeeper Servers</i> to try again.<br />
             If the error persists, please <a href="https://app.n.io/support" target="_blank" rel="noopener noreferrer">contact support</a>.
           </div>
-        ) : !staticPk && systemsOk ? (
+        )  : !staticPk  && systemsOk ? (
           <div className="pt-3 text-center">
             You do not seem to have configured your Pubkeeper server.<br />
             Please select one from the list below.
           </div>
         ) : !staticPk && !systemsOk ? (
-          <div className="text-center pt-3">
+          <div className="pt-3 text-center">
             No Systems Found.<br />
             <a href="https://designer.n.io" rel="noopener noreferrer" target="_blank">Click here to create one in the nio System Designer</a>
           </div>
         ) : staticPk && pkOK ? (
-          <div className="text-center pt-0">
+          <div className="pt-3 text-center">
             Your UI is configured to use the static Pubkeeper configuration details above.<br />
             Please open <i className="text-danger">config.js</i> at the project root to modify these value, or change <i className="text-danger">staticPubkeeper</i> to <b>false</b> to select a cloud Pubkeeper server.
           </div>
