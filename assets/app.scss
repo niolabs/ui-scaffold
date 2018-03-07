@@ -86,21 +86,23 @@
 
 }
 
+#pkConfig {
+  min-width:304px;
+
+  #pkDetails {
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  .pkAction {
+    padding: 8px 20px;
+  }
+}
+
 #demo_output{
   border: 1px solid $gray-lightest;
   height: 150px;
   border-radius: 4px;
   overflow-y: auto;
 }
-
-#pkDetails {
-  white-space: nowrap;
-  overflow-y: hidden;
-  overflow-x: auto;
-}
-
-
-
-
-
-

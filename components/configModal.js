@@ -67,11 +67,11 @@ class ConfigModal extends React.Component {
 
   getPubkeeperServers() {
     if (isAuthenticated()) {
-      this.setState({fetching: true});
+      this.setState({ fetching: true });
       setSystems(false);
       fetchPubkeeperServers()
         .then(e => !e && this.forceRender())
-        .catch(e => this.setState({fetching: false, fetchingError: e}));
+        .catch(e => this.setState({ fetching: false, fetchingError: e }));
     } else {
       login();
     }
@@ -98,20 +98,20 @@ class ConfigModal extends React.Component {
     const pkOK = pk && pk.PK_HOST && pk.PK_JWT && pk.WS_HOST;
 
     return (
-      <Modal isOpen={isOpen}>
+      <Modal id="pkConfig" isOpen={isOpen}>
         <div className="p-3">
           <Row>
-            <Col xs="7">
-              <h5 className="modal-title text-nowrap">Pubkeeper Servers</h5>
+            <Col xs="5">
+              <h4 className="modal-title text-nowrap">Pubkeeper</h4>
             </Col>
-            <Col xs="5" className="text-right text-nowrap">
+            <Col xs="7" className="text-right text-nowrap">
               { (!staticPk) && (
-                <Button alt="reload" title="reload" className="pkAction" size="sm" color="success" onClick={() => this.getPubkeeperServers()}>
+                <Button alt="reload" title="reload" className="pkAction" color="success" onClick={() => this.getPubkeeperServers()}>
                   <Icon color="white" name="revert" size="lg" />
                 </Button>
               )}
               { (pkOK || staticPk) && (
-                <Button alt="close" title="close" className="pkAction ml-1" size="sm" color="danger" onClick={() => closeConfig()}>
+                <Button alt="close" title="close" className="pkAction ml-1" color="danger" onClick={() => closeConfig()}>
                   <Icon color="white" name="times" size="lg" />
                 </Button>
               )}
@@ -129,7 +129,7 @@ class ConfigModal extends React.Component {
         ) : fetchingError ? (
           <div className="p-3 text-center">
             { fetchingError }<br />
-            Please click <i>Reload Pubkeeper Servers</i> to try again.<br />
+            Please click the green reload button to try again.<br />
             If the error persists, please <a href="https://app.n.io/support" target="_blank" rel="noopener noreferrer">contact support</a>.
           </div>
         ) : !staticPk && systemsOk ? (
