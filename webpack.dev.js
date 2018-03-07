@@ -56,7 +56,7 @@ module.exports = {
       },
     }),
     new ExtractTextPlugin('[contenthash].min.css'),
-    new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true }}, canPrint: true }),
+    new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true } }, canPrint: true }),
     new OptimizeJsPlugin({ sourceMap: false }),
     new UglifyJSPlugin({ parallel: true, sourceMap: true, cache: true, uglifyOptions: { compress: true } }),
     new webpack.HashedModuleIdsPlugin({ hashFunction: 'sha256', hashDigest: 'hex', hashDigestLength: 20 }),
@@ -75,10 +75,10 @@ module.exports = {
         test: /\.html$/,
         use: [
           {
-            loader: "html-loader",
-            options: { minimize: true }
-          }
-        ]
+            loader: 'html-loader',
+            options: { minimize: true },
+          },
+        ],
       },
       {
         include: [/\.(ttf|woff|woff2|eot|svg)$/],
