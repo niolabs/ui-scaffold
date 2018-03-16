@@ -80,6 +80,21 @@ body{
   }
 }
 
+#pkConfig {
+  min-width:304px;
+
+  #pkDetails {
+    width: 100%;
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  .pkAction {
+    padding: 8px 20px;
+  }
+}
+
 /* lato-300 - latin */
 @font-face {
   font-family: 'Lato';

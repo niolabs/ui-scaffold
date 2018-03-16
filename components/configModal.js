@@ -110,7 +110,7 @@ class ConfigModal extends React.Component {
                   <Icon color="white" name="revert" size="lg" />
                 </Button>
               )}
-              { (pkOK || staticPk) && (
+              { (pkOK || (staticPk && pkOK)) && (
                 <Button alt="close" title="close" className="pkAction ml-1" color="danger" onClick={() => closeConfig()}>
                   <Icon color="white" name="times" size="lg" />
                 </Button>
@@ -154,32 +154,34 @@ class ConfigModal extends React.Component {
           </div>
         ) : null
         }
-        <div className="p-3">
-          { fetching || setting ? (
-            <div className="text-center p-4" style={{ position: 'relative' }}>
-              <br /><br /><br />
-              <Loader />
-            </div>
-          ) : systemsOk ? Object.keys(systems).map(uuid => systems[uuid].pk_host && systems[uuid].pk_token && (
-            <div key={uuid}>
-              <Button
-                className="mb-3"
-                outline={!pk || !systems[uuid].active}
-                color="primary"
-                block
-                onClick={() => (!systems[uuid].active ? this.setPubkeeperServer(uuid) : closeConfig())}
-              >
-                {systems[uuid].org} &raquo; {systems[uuid].name}
-              </Button>
-            </div>
-          )) : !systems ? (
-            <div className="text-center p-4" style={{ position: 'relative' }}>
-              <br /><br /><br />
-              <Loader />
-            </div>
-          ) : null
-          }
-        </div>
+        { !staticPk && (
+          <div className="p-3">
+            { fetching || setting ? (
+              <div className="text-center p-4" style={{ position: 'relative' }}>
+                <br /><br /><br />
+                <Loader />
+              </div>
+            ) : systemsOk ? Object.keys(systems).map(uuid => systems[uuid].pk_host && systems[uuid].pk_token && (
+              <div key={uuid}>
+                <Button
+                  className="mb-3"
+                  outline={!pk || !systems[uuid].active}
+                  color="primary"
+                  block
+                  onClick={() => (!systems[uuid].active ? this.setPubkeeperServer(uuid) : closeConfig())}
+                >
+                  {systems[uuid].org} &raquo; {systems[uuid].name}
+                </Button>
+              </div>
+            )) : !systems ? (
+              <div className="text-center p-4" style={{ position: 'relative' }}>
+                <br /><br /><br />
+                <Loader />
+              </div>
+            ) : null
+            }
+          </div>
+        )}
       </Modal>
     );
   }

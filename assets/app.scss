@@ -6,21 +6,6 @@
 /*    place your app-specific css below (or make component/view   */
 /*    specific scss files and throw them in the css folder)       */
 
-
-#pkConfig {
-  min-width:304px;
-
-  #pkDetails {
-    white-space: nowrap;
-    overflow-y: hidden;
-    overflow-x: auto;
-  }
-
-  .pkAction {
-    padding: 8px 20px;
-  }
-}
-
 #demo_output{
   border: 1px solid #e6e9ee;
   height: 150px;

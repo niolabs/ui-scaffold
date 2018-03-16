@@ -6,6 +6,7 @@ import '../assets/app.scss';
 import Routes from './routes';
 import ConfigModal from './configModal';
 import { isAuthenticated, authRequired, handleAuthentication, login, logout } from '../util/auth';
+import { staticPubkeeper } from '../util/pubkeeper';
 
 class App extends React.Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class App extends React.Component {
     const { navOpen, configOpen } = this.state;
     const auth = isAuthenticated();
     const authrequired = authRequired();
+    const staticPK = staticPubkeeper();
 
     return (auth || !authrequired) ? (
       <div>
@@ -62,10 +64,12 @@ class App extends React.Component {
               <NavItem>
                 <NavLink onClick={this.toggleNav} exact to="/page3">Page 3</NavLink>
               </NavItem>
-              <NavItem>
-                <DumbNavLink onClick={() => this.openConfig()} title="settings"><i className="fa fa-lg fa-gear" /></DumbNavLink>
-              </NavItem>
-              { authrequired && (
+              { !staticPK && (
+                <NavItem>
+                  <DumbNavLink onClick={() => this.openConfig()} title="settings"><i className="fa fa-lg fa-gear" /></DumbNavLink>
+                </NavItem>
+              )}
+              { (authrequired || auth) && (
                 auth ? (
                   <NavItem>
                     <DumbNavLink onClick={() => logout()} title="log out"><i className="fa fa-lg fa-sign-out" /></DumbNavLink>
