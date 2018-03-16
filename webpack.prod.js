@@ -1,18 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
-const webpack = require('webpack');
+const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const postCssFlexbugFixes = require('postcss-flexbugs-fixes');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const OptimizeJsPlugin = require('optimize-js-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const cssNano = require('cssnano');
-const CopyWebpackPlugin = require('copy-webpack-plugin'); // uncomment this if you place any files into assets/static
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 /* eslint-enable import/no-extraneous-dependencies */
 
 module.exports = {
-  entry: path.join(__dirname, 'assets/index.js'),
+  entry: ['babel-polyfill', path.join(__dirname, 'assets/index.js')],
 
   output: {
     path: path.join(__dirname, 'public'),
@@ -20,10 +19,7 @@ module.exports = {
     publicPath: '/',
   },
 
-  devtool: 'source-map',
-
   plugins: [
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
     new CleanWebpackPlugin(['public']),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'assets/index.html'),
@@ -47,11 +43,10 @@ module.exports = {
     }),
     new ExtractTextPlugin('[contenthash].min.css'),
     new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true } }, canPrint: true }),
-    new OptimizeJsPlugin({ sourceMap: false }),
-    new UglifyJSPlugin({ parallel: true, sourceMap: true, cache: true, uglifyOptions: { compress: true } }),
-    new webpack.HashedModuleIdsPlugin({ hashFunction: 'sha256', hashDigest: 'hex', hashDigestLength: 20 }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new CopyWebpackPlugin([{ from: 'assets/static' }]), // uncomment this if you place any files into assets/static
+    new CopyWebpackPlugin([
+      { from: path.join(__dirname, '/assets/images/'), to: 'images/' },
+      { from: path.join(__dirname, '/assets/fonts/'), to: 'fonts/' },
+    ]),
   ],
 
   module: {
@@ -60,6 +55,9 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
+        options: {
+          presets: ['babel-preset-env'],
+        },
       },
       {
         test: /\.html$/,
@@ -81,7 +79,35 @@ module.exports = {
         test: /\.s?css$/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: ['css-loader?importLoaders=1', 'sass-loader'],
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+                plugins: () => [
+                  postCssFlexbugFixes,
+                  autoprefixer({
+                    browsers: [
+                      '>1%',
+                      'last 4 versions',
+                      'Firefox ESR',
+                      'not ie < 9', // React doesn't support IE8 anyway
+                    ],
+                    flexbox: 'no-2009',
+                  }),
+                ],
+              },
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
         }),
       },
       {

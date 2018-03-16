@@ -1,0 +1,121 @@
+body{
+  min-width:320px;
+  overflow-x: hidden;
+
+  #app {
+    min-width:320px;
+    overflow-x: hidden;
+
+    #app-container{
+      min-width: 320px;
+      margin-top: 70px;
+      padding: 2rem;
+      height: calc(100vh - 70px);
+      @media screen and (max-width: 991px) {
+        padding: 1rem;
+      }
+    }
+
+    #app-nav {
+      min-width: 320px;
+      background: #507CCD !important;
+      padding: 0.5rem 2rem;
+      position: fixed;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid #e6e9ee;
+
+      @media screen and (max-width: 991px) {
+        padding: 0.5rem 1rem;
+      }
+
+      #logo {
+        height: 30px;
+        width: 126px;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20id%3D%27Layer_1%27%20data-name%3D%27Layer%201%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%201144%20257%27%20height%3D%2760px%27%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23e6e9ee%3B%7D.cls-2%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Efinal_niolabs_logo_light%3C%2Ftitle%3E%3Cpath%20class%3D%27cls-1%27%20d%3D%27M536%2C5.56V247.36H494.15V5.56Z%27%2F%3E%3Cpath%20class%3D%27cls-1%27%20d%3D%27M708.28%2C76.82h40.47V247.36H709l-2.08-24.91c-9.69%2C20.06-36.32%2C29.75-55.35%2C30.1-50.51.35-87.87-30.79-87.87-90.63%2C0-58.81%2C39.09-89.6%2C88.91-89.25%2C22.83%2C0%2C44.62%2C10.72%2C54.31%2C27.68Zm-102.4%2C85.1c0%2C32.52%2C22.49%2C51.89%2C50.51%2C51.89%2C66.42%2C0%2C66.42-103.43%2C0-103.43C628.37%2C110.37%2C605.89%2C129.4%2C605.89%2C161.92Z%27%2F%3E%3Cpath%20class%3D%27cls-1%27%20d%3D%27M823.13%2C5.56V100c10-17.64%2C38.05-27.33%2C56-27.33C929%2C72.67%2C966%2C103.11%2C966%2C161.92c0%2C56-37.71%2C89.25-87.87%2C89.25-20.76%2C0-41.86-6.92-55-27.33l-2.77%2C23.52H780.92V5.56Zm2.77%2C156.36c0%2C30.79%2C22.83%2C50.16%2C49.47%2C50.16%2C27%2C0%2C48.43-20.41%2C48.43-50.16%2C0-30.79-21.45-49.81-48.43-49.81C848.73%2C112.1%2C825.9%2C132.17%2C825.9%2C161.92Z%27%2F%3E%3Cpath%20class%3D%27cls-1%27%20d%3D%27M1108.52%2C122.14c-12.11-11.41-25.95-15.22-42.2-15.22-20.06%2C0-31.13%2C6.23-31.13%2C16.95%2C0%2C11.07%2C10%2C17.3%2C31.83%2C18.68%2C32.17%2C2.08%2C73%2C9.34%2C73%2C54.66%2C0%2C30.1-24.56%2C56-73.34%2C56-27%2C0-54-4.5-78.87-30.44l20.76-30.1c12.11%2C13.49%2C39.78%2C23.52%2C58.81%2C23.87%2C15.91.35%2C30.79-8%2C30.79-20.41%2C0-11.76-9.69-16.61-33.9-18-32.17-2.42-70.57-14.18-70.57-52.93%2C0-39.44%2C40.82-53.27%2C72-53.27%2C26.64%2C0%2C46.7%2C5.19%2C66.42%2C22.49Z%27%2F%3E%3Cpath%20class%3D%27cls-2%27%20d%3D%27M130.57%2C247.86V158.25c0-26-14.24-45.84-41.33-45.84-26.05%2C0-43.76%2C21.88-43.76%2C47.93v87.52h-42V76.29H41.31l2.78%2C23.27c17.37-17%2C34.73-25.71%2C56.26-25.71%2C40.29%2C0%2C72.59%2C30.22%2C72.59%2C84.05v90Z%27%2F%3E%3Cpath%20class%3D%27cls-2%27%20d%3D%27M254.33%2C28.35c0%2C33-50%2C33-50%2C0S254.33-4.64%2C254.33%2C28.35ZM208.14%2C75.94V247.86h42.37V75.94Z%27%2F%3E%3Cpath%20class%3D%27cls-2%27%20d%3D%27M462.72%2C162.42c0%2C49.32-33.69%2C89.26-89.26%2C89.26s-88.91-39.94-88.91-89.26c0-49%2C34-89.26%2C88.57-89.26S462.72%2C113.45%2C462.72%2C162.42Zm-135.8%2C0c0%2C26.05%2C15.63%2C50.36%2C46.54%2C50.36S420%2C188.47%2C420%2C162.42c0-25.7-18.06-50.7-46.54-50.7C342.9%2C111.71%2C326.92%2C136.72%2C326.92%2C162.42Z%27%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: top left;
+        background-size: contain;
+      }
+
+      .navbar-toggler{
+        @media screen and (min-width: 576px) {
+          display:none;
+        }
+      }
+
+      .collapse:not(.show) {
+        .nav-item {
+          margin-left: 1.5rem;
+          .nav-link,
+          a {
+            color: #ced4da !important;
+            padding: 0 !important;
+            &.active,
+            &:hover {
+              color: #fefefe !important;
+            }
+          }
+        }
+      }
+
+      .collapse.show,
+      .collapsing {
+        left: 0;
+        right: 0;
+        margin: 0;
+        top: 70px;
+        background: #fefefe;
+
+        .navbar-nav {
+          padding: 0;
+          .nav-item {
+            margin-left: 0;
+            text-align: center;
+            .nav-link,
+            a {
+              display: block;
+              color: #6a7578 !important;
+              padding: 1rem 0 !important;
+              border-bottom: 1px solid #e6e9ee;
+              &.active,
+              &:hover {
+                color: #507CCD !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* lato-300 - latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/lato-v14-latin-300.eot');
+  src:
+    local('Lato Light'), local('Lato-Light'),
+    url('/fonts/lato-v14-latin-300.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/lato-v14-latin-300.woff2') format('woff2'),
+    url('/fonts/lato-v14-latin-300.woff') format('woff'),
+    url('/fonts/lato-v14-latin-300.ttf') format('truetype'),
+    url('/fonts/lato-v14-latin-300.svg#Lato') format('svg');
+}
+
+/* lato-regular - latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/lato-v14-latin-regular.eot');
+  src:
+    local('Lato Regular'),
+    local('Lato-Regular'),
+    url('/fonts/lato-v14-latin-regular.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/lato-v14-latin-regular.woff2') format('woff2'),
+    url('/fonts/lato-v14-latin-regular.woff') format('woff'),
+    url('/fonts/lato-v14-latin-regular.ttf') format('truetype'),
+    url('/fonts/lato-v14-latin-regular.svg#Lato') format('svg');
+}
