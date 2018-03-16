@@ -53,6 +53,7 @@
     "optimize-js-plugin": "0.0.4",
     "postcss-flexbugs-fixes": "^3.3.0",
     "postcss-loader": "^2.1.1",
+    "sass-lint": "^1.12.1",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "uglifyjs-webpack-plugin": "^1.2.4",
