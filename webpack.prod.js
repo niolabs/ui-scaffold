@@ -41,7 +41,7 @@ module.exports = {
         useShortDoctype: true,
       },
     }),
-    new ExtractTextPlugin('[contenthash].min.css'),
+    new ExtractTextPlugin('[chunkhash].min.css'),
     new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true } }, canPrint: true }),
     new CopyWebpackPlugin([
       { from: path.join(__dirname, '/assets/images/'), to: 'images/' },
