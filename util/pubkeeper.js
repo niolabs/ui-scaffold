@@ -50,7 +50,7 @@ export const createPubkeeperClient = () => new Promise((resolve, reject) => {
   }
 });
 
-const fetchOrganizations = accessToken => new Promise((resolve, reject) => {
+const fetchOrganizations = accessToken => new Promise((resolve) => {
   fetch(`${config.auth0.webAuth.audience}/orgs/organizations`, {
     method: 'get',
     headers: {
@@ -60,7 +60,7 @@ const fetchOrganizations = accessToken => new Promise((resolve, reject) => {
     .catch(e => resolve(e));
 });
 
-const fetchSystems = (accessToken, organization_id) => new Promise((resolve, reject) => {
+const fetchSystems = (accessToken, organization_id) => new Promise((resolve) => {
   fetch(`${config.auth0.webAuth.audience}/systems`, {
     method: 'get',
     headers: {
@@ -68,10 +68,10 @@ const fetchSystems = (accessToken, organization_id) => new Promise((resolve, rej
       'nio-organization': organization_id,
     } })
     .then(systems => resolve(systems.json()))
-    .catch(e => reject(e));
+    .catch(e => resolve(e));
 });
 
-const fetchSystemDetails = (accessToken, organization_id, systemId) => new Promise((resolve, reject) => {
+const fetchSystemDetails = (accessToken, organization_id, systemId) => new Promise((resolve) => {
   fetch(`${config.auth0.webAuth.audience}/systems/${systemId}`, {
     method: 'get',
     headers: {
@@ -79,7 +79,7 @@ const fetchSystemDetails = (accessToken, organization_id, systemId) => new Promi
       'nio-organization': organization_id,
     } })
     .then(system => resolve(system.json()))
-    .catch(e => reject(e));
+    .catch(e => resolve(e));
 });
 
 export const fetchPubkeeperServers = () => new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ export const fetchPubkeeperServers = () => new Promise((resolve, reject) => {
   fetchOrganizations(accessToken).then((orgs) => {
     orgs.organizations.map(org => fetchSystems(accessToken, org.organization_id).then((systems) => {
       totalSystemCount += systems.systems.length;
-      systems.systems.map((system) => {
+      systems.systems.map(system =>
         fetchSystemDetails(accessToken, org.organization_id, system.uuid).then((sysDetail) => {
           clearTimeout(loopTimeout);
           if (sysDetail.pubkeeper_host && sysDetail.pubkeeper_token && sysDetail.pubkeeper_type === 'hosted') {
@@ -116,10 +116,9 @@ export const fetchPubkeeperServers = () => new Promise((resolve, reject) => {
               resolve(setSystems(mySystems));
             }, 1000);
           }
-        }).catch(e => reject('We were unable to fetch your system details.'));
-      });
-    }).catch(e => reject('We were unable to fetch your systems.')));
-  }).catch(e => reject('We were unable to fetch your organizations.'));
+        }).catch(() => reject(new Error('We were unable to fetch your system details.'))));
+    }).catch(() => reject(new Error('We were unable to fetch your systems.'))));
+  }).catch(() => reject(new Error('We were unable to fetch your organizations.')));
 });
 
 export const processPubkeeperData = (data) => {
