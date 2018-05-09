@@ -11,9 +11,9 @@
   "author": "niolabs",
   "license": "Apache-2.0",
   "dependencies": {
-    "@nio/ui-kit": "^1.6.2",
+    "@nio/ui-kit": "^1.6.3",
     "@pubkeeper/browser-client": "^3.2.1",
-    "auth0-js": "^9.5.0",
+    "auth0-js": "^9.5.1",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "moment": "^2.22.1",
@@ -25,7 +25,7 @@
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "autoprefixer": "^8.3.0",
+    "autoprefixer": "^8.4.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
@@ -50,14 +50,14 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.0",
-    "optimize-css-assets-webpack-plugin": "^4.0.0",
-    "postcss-flexbugs-fixes": "^3.3.0",
-    "postcss-loader": "^2.1.4",
+    "optimize-css-assets-webpack-plugin": "^4.0.1",
+    "postcss-flexbugs-fixes": "^3.3.1",
+    "postcss-loader": "^2.1.5",
     "sass-lint": "^1.12.1",
     "sass-loader": "^7.0.1",
     "style-loader": "0.21.0",
-    "webpack": "^4.6.0",
-    "webpack-cli": "^2.0.15",
-    "webpack-dev-server": "^3.1.3"
+    "webpack": "^4.8.1",
+    "webpack-cli": "^2.1.3",
+    "webpack-dev-server": "^3.1.4"
   }
 }
