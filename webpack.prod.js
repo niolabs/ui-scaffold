@@ -11,7 +11,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 /* eslint-enable import/no-extraneous-dependencies */
 
 module.exports = {
-  entry: ['babel-polyfill', path.join(__dirname, 'assets/index.js')],
+  entry: ['@babel/polyfill', path.join(__dirname, 'assets/index.js')],
 
   output: {
     path: path.join(__dirname, 'public'),
@@ -56,7 +56,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          presets: ['babel-preset-env'],
+          presets: ['@babel/preset-env'],
         },
       },
       {
