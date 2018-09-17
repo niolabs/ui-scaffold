@@ -1,78 +1,69 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Card, CardBody, Clock, Row, Col, Button } from '@nio/ui-kit';
+import { withPubkeeper } from '../providers/pubkeeper';
 
-import { Card, CardBody, Row, Col, Clock } from '@nio/ui-kit';
-import { createPubkeeperClient, getPubkeeper } from '../util/pubkeeper';
+class Page extends Component {
+  state = { currentTime: false, historicalTime: [], fakeTime: new Date(), historicalFakeTime: [] };
 
-export default class Home extends React.Component {
-  constructor() {
-    super();
-    this.state = { time: new Date() };
-    this.clock = false;
-    const fns = ['writeDataToOutput', 'clockRef', 'connectToPubkeeper'];
-    fns.forEach((fn) => { this[fn] = this[fn].bind(this); });
-  }
+  componentDidMount = async () => {
+    const { pkClient } = this.props;
+    pkClient.addPatron('ui_scaffold.example_brew', patron => patron.on('message', this.writeDataToOutput));
+    pkClient.addBrewer('ui_scaffold.example_brew', brewer => this.brewer = brewer);
+  };
 
-  componentDidMount() {
-    this.connectToPubkeeper();
-  }
+  writeDataToOutput = (data) => {
+    const { historicalTime, historicalFakeTime } = this.state;
 
-  componentWillUnmount() {
-    if (this.brewInterval) clearInterval(this.brewInterval);
-    if (this.pkClient) this.pkClient.disconnect();
-  }
-
-  connectToPubkeeper() {
-    createPubkeeperClient()
-      .then((pkClient) => {
-        this.pkClient = pkClient;
-        pkClient.connect().then(() => {
-          pkClient.addBrewer('ui_scaffold.example_brew', (brewer) => {
-            this.brewInterval = setInterval(() => brewer.brewJSON([{ time: new Date() }]), 1000);
-            return () => clearInterval(this.brewInterval);
-          });
-          pkClient.addPatron('ui_scaffold.example_brew', (patron) => {
-            patron.on('message', this.writeDataToOutput);
-            return () => patron.off('message', this.writeDataToOutput);
-          });
-        });
-      })
-      .catch(() => console.log('unable to locate pubkeeper config details.')); // eslint-disable-line no-console
-  }
-
-  writeDataToOutput(data) {
     const json = new TextDecoder().decode(data);
-    const time = Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
+    const { time, newFakeTime } = Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
+    if (time) {
+      const currentTime = new Date(time);
+      historicalTime.unshift(currentTime.toLocaleString());
+      this.setState({ currentTime, historicalTime });
+    }
+    if (newFakeTime) {
+      const fakeTime = new Date(newFakeTime);
+      historicalFakeTime.unshift(fakeTime.toLocaleString());
+      this.setState({ fakeTime, historicalFakeTime });
+    }
+  };
 
-    // set the current time (which updates the clock)
-    if (this.clock) this.setState({ time: new Date(time.time) });
-
-    // append to list of all times
-    const newDiv = document.createElement('div');
-    document.getElementById('demo_output').prepend(newDiv);
-    newDiv.textContent = json;
-  }
-
-  clockRef(el) {
-    this.clock = el;
-  }
+  sendAFakeTimestamp = () => {
+    this.brewer.brewJSON([{ newFakeTime: new Date() }]);
+  };
 
   render() {
-    const { time } = this.state;
-    const pkConfig = getPubkeeper();
+    const { currentTime, historicalTime, fakeTime, historicalFakeTime } = this.state;
 
     return (
       <Card>
         <CardBody className="p-3">
-          <h2 className="m-0">Home</h2>
-          <b>Current Time:</b> {time.toLocaleString()}<br />
-          <b>Pubkeeper Server:</b> {pkConfig ? pkConfig.PK_NAME : '-'}
+          <Row>
+            <Col sm="6" xs="12">
+              <h2 className="m-0">Home</h2>
+              <b>Current Time:</b> {currentTime && currentTime.toLocaleString()}<br />
+            </Col>
+            <Col sm="6" xs="12" className="text-right mt-2">
+              <Button color="primary" onClick={() => this.sendAFakeTimestamp()}>Send Fake Time</Button>
+            </Col>
+          </Row>
           <hr className="my-3" />
           <Row>
-            <Col xs="12" sm="6" className="mb-2 text-center">
-              <Clock ref={this.clockRef} value={time} />
+            <Col sm="3" xs="12">
+              {currentTime && (<Clock value={currentTime} />)}
             </Col>
-            <Col xs="12" sm="6">
-              <div id="demo_output" />
+            <Col sm="3" xs="12">
+              <div id="demo_output">
+                {historicalTime && historicalTime.map((h, i) => (<div key={i}>{h}</div>))}
+              </div>
+            </Col>
+            <Col sm="3" xs="12">
+              {fakeTime && (<Clock value={fakeTime} />)}
+            </Col>
+            <Col sm="3" xs="12">
+              <div id="demo_output">
+                {historicalFakeTime && historicalFakeTime.map((h, i) => (<div key={i}>{h}</div>))}
+              </div>
             </Col>
           </Row>
         </CardBody>
@@ -80,3 +71,5 @@ export default class Home extends React.Component {
     );
   }
 }
+
+export default withPubkeeper(Page);
