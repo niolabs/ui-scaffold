@@ -5,7 +5,6 @@ const postCssFlexbugFixes = require('postcss-flexbugs-fixes');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const cssNano = require('cssnano');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 /* eslint-enable import/no-extraneous-dependencies */
 
@@ -35,24 +34,9 @@ module.exports = {
       template: path.join(__dirname, 'assets/index.html'),
       favicon: path.join(__dirname, 'assets/favicon.ico'),
       inject: 'body',
-      minify: {
-        caseSensitive: true,
-        collapseInlineTagWhitespace: true,
-        collapseWhitespace: true,
-        minifyJS: true,
-        keepClosingSlash: true,
-        collapseBooleanAttributes: true,
-        removeComments: true,
-        removeOptionalTags: true,
-        removeRedundantAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        trimCustomFragments: true,
-        useShortDoctype: true,
-      },
     }),
     new ExtractTextPlugin('[chunkhash].min.css'),
-    new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessor: cssNano, cssProcessorOptions: { discardComments: { removeAll: true } }, canPrint: true }),
+    new OptimizeCssAssetsPlugin({ assetNameRegExp: /\.css$/g, cssProcessorOptions: { discardComments: { removeAll: true } }, canPrint: true }),
     new CopyWebpackPlugin([
       { from: path.join(__dirname, '/assets/images/'), to: 'images/' },
       { from: path.join(__dirname, '/assets/fonts/'), to: 'fonts/' },

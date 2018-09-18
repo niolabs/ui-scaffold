@@ -20,6 +20,7 @@
     "no-return-assign": 0,
     "no-nested-ternary": 0,
     "react/jsx-one-expression-per-line": 0,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "react/no-array-index-key": 0
   }
 }

@@ -5,10 +5,16 @@
 /*    place your app-specific css below (or make component/view   */
 /*    specific scss files and throw them in the css folder)       */
 
-#demo_output{
+#demo_output,
+#demo_output_2 {
   border: 1px solid #e6e9ee;
   height: 160px;
   border-radius: 4px;
   overflow-y: auto;
   padding: 10px;
+}
+
+#demo_output_2{
+  height: 110px;
+  margin-top: 14px;
 }
