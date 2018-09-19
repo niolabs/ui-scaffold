@@ -42,7 +42,8 @@ class Page extends Component {
     return (
       <Card>
         <CardBody className="p-3">
-          <h2 className="m-0">UI Scaffold Demo</h2>
+          <h2 className="m-0">UI Scaffold / Pubkeeper Demo</h2>
+          Sending signals to and receiving signals from nio services via the Pubkeeper javascript client.
           <hr />
           <Row>
             <Col md="4">
