@@ -14,21 +14,21 @@ class Page extends Component {
 
   writeDataToState = (data) => {
     const { historicalTime } = this.state;
-
     const json = new TextDecoder().decode(data);
     const { time } = Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
     const currentTime = new Date(time);
     historicalTime.unshift(currentTime.toLocaleString());
+    historicalTime.splice(6, 1);
     this.setState({ currentTime, historicalTime });
   };
 
   writeDataToState2 = (data) => {
     const { historicalBrewedTime } = this.state;
-
     const json = new TextDecoder().decode(data);
     const { newBrewedTime } = Array.isArray(JSON.parse(json)) ? JSON.parse(json)[0] : JSON.parse(json);
     const brewedTime = new Date(newBrewedTime);
     historicalBrewedTime.unshift(brewedTime.toLocaleString());
+    historicalBrewedTime.splice(4, 1);
     this.setState({ brewedTime, historicalBrewedTime });
   };
 
