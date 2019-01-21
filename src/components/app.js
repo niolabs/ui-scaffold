@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, NavbarToggler, Nav, NavItem, Collapse } from '@nio/ui-kit';
 import { NavLink } from 'react-router-dom';
 
-import '../assets/app.scss';
+import '../app.scss';
 import Routes from './routes';
 
 class App extends Component {

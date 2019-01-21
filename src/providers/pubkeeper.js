@@ -1,7 +1,7 @@
 import React from 'react';
 import { PubkeeperClient, WebSocketBrew } from '@pubkeeper/browser-client';
 
-import config from '../config';
+import config from '../../config';
 
 const PubkeeperContext = React.createContext();
 
