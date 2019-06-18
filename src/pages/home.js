@@ -38,7 +38,7 @@ class Page extends Component {
     this.brewer.brewJSON([{ newBrewedTime: new Date() }]);
   };
 
-  render() {
+  render = () => {
     const { currentTime, historicalTime, brewedTime, historicalBrewedTime } = this.state;
 
     return (
@@ -105,7 +105,7 @@ class Page extends Component {
         </CardBody>
       </Card>
     );
-  }
+  };
 }
 
 export default withPubkeeper(Page);
