@@ -26,7 +26,7 @@ export class PubkeeperProvider extends React.Component {
       <PubkeeperContext.Provider value={this.pkClient}>
         {children}
       </PubkeeperContext.Provider>
-    ) : null;
+    ) : children;
   };
 }
 

@@ -7,9 +7,11 @@ class Page extends Component {
 
   componentDidMount = () => {
     const { pkClient } = this.props;
-    pkClient.addPatron('ui_scaffold.example_brew', patron => patron.on('message', this.writeDataToState));
-    pkClient.addBrewer('ui_scaffold.example_brew2', brewer => this.brewer = brewer);
-    pkClient.addPatron('ui_scaffold.example_brew2', patron => patron.on('message', this.writeDataToState2));
+    if (pkClient) {
+      pkClient.addPatron('ui_scaffold.example_brew', patron => patron.on('message', this.writeDataToState));
+      pkClient.addBrewer('ui_scaffold.example_brew2', brewer => this.brewer = brewer);
+      pkClient.addPatron('ui_scaffold.example_brew2', patron => patron.on('message', this.writeDataToState2));
+    }
   };
 
   writeDataToState = (data) => {
@@ -94,7 +96,7 @@ class Page extends Component {
               <Clock value={brewedTime} />
             </Col>
             <Col md="3" sm="6">
-              <Button block color="primary" onClick={() => this.brewCurrentTimestamp()}>Brew Current Time</Button>
+              <Button block color="primary" onClick={() => this.brewCurrentTimestamp()} className="text-nowrap">Brew Current Time</Button>
               <div id="demo_output_2">
                 {historicalBrewedTime && historicalBrewedTime.map((h, i) => (<div key={i}>{h}</div>))}
               </div>
